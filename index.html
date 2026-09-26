@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A* Puzzle Solver</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>A* Puzzle Solver</h1>
+        </header>
+        <div class="main-content">
+            <div class="controls panel">
+                <h2>Controls</h2>
+                <div class="control-group">
+                    <label for="puzzle-size">Puzzle Type:</label>
+                    <select id="puzzle-size">
+                        <option value="3">8-Puzzle (3x3)</option>
+                        <option value="4">15-Puzzle (4x4)</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="heuristic">Heuristic:</label>
+                    <select id="heuristic">
+                        <option value="manhattan">Manhattan Distance</option>
+                        <option value="misplaced">Misplaced Tiles</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="speed">Animation Speed:</label>
+                    <input type="range" id="speed" min="10" max="800" value="150" dir="rtl">
+                </div>
+                <div class="button-group">
+                    <button id="btn-shuffle" class="btn primary">Shuffle</button>
+                    <button id="btn-solve" class="btn success">Solve with A*</button>
+                </div>
+            </div>
+            
+            <div class="board-container panel">
+                <div id="board" class="board size-3"></div>
+                <div id="status-message" class="status">Ready</div>
+            </div>
+
+            <div class="metrics panel">
+                <h2>Metrics Dashboard</h2>
+                <div class="metric-box">
+                    <span class="metric-label">Execution Time</span>
+                    <span id="metric-time" class="metric-value">-</span>
+                </div>
+                <div class="metric-box">
+                    <span class="metric-label">Nodes Expanded</span>
+                    <span id="metric-nodes" class="metric-value">-</span>
+                </div>
+                <div class="metric-box">
+                    <span class="metric-label">Total Moves</span>
+                    <span id="metric-moves" class="metric-value">-</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
