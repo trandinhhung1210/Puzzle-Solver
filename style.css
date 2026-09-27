@@ -29,7 +29,7 @@ body {
 }
 
 .container {
-    max-width: 1050px;
+    max-width: 1200px;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -53,12 +53,31 @@ header h1 {
     justify-content: center;
 }
 
+.left-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    flex: 1 1 250px;
+    max-width: 320px;
+}
+
+.board-container {
+    flex: 2 1 420px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.metrics#ai-stats {
+    flex: 1 1 250px;
+    max-width: 320px;
+}
+
 .panel {
     background: var(--panel-bg);
     padding: 1.5rem;
     border-radius: var(--border-radius);
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15);
-    flex: 1 1 260px;
     border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
@@ -104,11 +123,9 @@ select:focus {
 .button-group {
     display: flex;
     gap: 1rem;
-    margin-top: 2rem;
 }
 
 .btn {
-    flex: 1;
     padding: 0.75rem;
     border: none;
     border-radius: 6px;
@@ -121,25 +138,13 @@ select:focus {
     letter-spacing: 1px;
 }
 
-.btn.primary {
-    background: var(--accent);
-    box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
-}
+.btn.primary { background: var(--accent); box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3); }
+.btn.primary:hover:not(:disabled) { background: var(--accent-hover); transform: translateY(-1px); }
 
-.btn.primary:hover:not(:disabled) {
-    background: var(--accent-hover);
-    transform: translateY(-1px);
-}
+.btn.success { background: var(--success); box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); }
+.btn.success:hover:not(:disabled) { background: var(--success-hover); transform: translateY(-1px); }
 
-.btn.success {
-    background: var(--success);
-    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
-}
-
-.btn.success:hover:not(:disabled) {
-    background: var(--success-hover);
-    transform: translateY(-1px);
-}
+.btn:hover:not(:disabled) { filter: brightness(1.1); transform: translateY(-1px); }
 
 .btn:disabled {
     opacity: 0.5;
@@ -148,19 +153,12 @@ select:focus {
     transform: none;
 }
 
-.board-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    flex: 2 1 420px;
-}
-
 .board {
     position: relative;
     background: #0f172a;
     border-radius: var(--border-radius);
-    width: 360px;
-    height: 360px;
+    width: 380px;
+    height: 380px;
     border: 4px solid #1e293b;
     box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
     overflow: hidden;
@@ -187,6 +185,32 @@ select:focus {
     background: linear-gradient(135deg, #475569, #334155);
     transform: scale(0.98);
     box-shadow: inset 0 1px 1px rgba(255,255,255,0.15), 0 2px 4px rgba(0,0,0,0.4);
+}
+
+/* Image Puzzle Mode Styles */
+.tile.image-mode {
+    background-image: var(--bg-image);
+    background-size: calc(var(--grid-size) * 100%) calc(var(--grid-size) * 100%);
+    background-position: calc(var(--target-col) * (100% / (var(--grid-size) - 1))) calc(var(--target-row) * (100% / (var(--grid-size) - 1)));
+    color: transparent; /* hide numbers by default */
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.9);
+    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: none;
+}
+
+.tile.image-mode:hover {
+    color: rgba(255,255,255,0.9); /* Reveal number gently on hover to help player */
+}
+
+/* Hint Animation */
+@keyframes hintBlink {
+    0% { box-shadow: 0 0 10px 2px #8b5cf6; background-color: #8b5cf6; color:white; }
+    50% { box-shadow: 0 0 20px 5px #a78bfa; background-color: #a78bfa; color:white; border-color:#fff;}
+    100% { box-shadow: 0 0 10px 2px #8b5cf6; background-color: #8b5cf6; color:white; }
+}
+.tile.hinted {
+    animation: hintBlink 1.5s infinite;
+    z-index: 10;
 }
 
 .status {
@@ -221,6 +245,7 @@ select:focus {
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-bottom: 0.5rem;
+    text-align: center;
 }
 
 .metric-value {
@@ -230,15 +255,8 @@ select:focus {
     text-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
 }
 
-@media (max-width: 768px) {
-    .main-content {
-        flex-direction: column;
-    }
-    .board {
-        width: 300px;
-        height: 300px;
-    }
-    .tile {
-        font-size: 1.8rem;
-    }
+@media (max-width: 900px) {
+    .main-content { flex-direction: column; align-items: center; }
+    .left-panel, .metrics#ai-stats { max-width: 100%; width: 100%; }
+    .board { width: 340px; height: 340px; }
 }

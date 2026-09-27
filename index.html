@@ -3,48 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A* Puzzle Solver</title>
+    <title>Advanced A* Puzzle Solver Pro</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>A* Puzzle Solver</h1>
+            <h1>A* Puzzle Solver Pro</h1>
+            <p style="text-align:center; color:var(--text-muted); margin-top:0.5rem; letter-spacing: 1px;">
+                Keyboard Controls: ⌨️ W, A, S, D or Arrows
+            </p>
         </header>
         <div class="main-content">
-            <div class="controls panel">
-                <h2>Controls</h2>
-                <div class="control-group">
-                    <label for="puzzle-size">Puzzle Type:</label>
-                    <select id="puzzle-size">
-                        <option value="3">8-Puzzle (3x3)</option>
-                        <option value="4">15-Puzzle (4x4)</option>
-                    </select>
+            <!-- Left Panel: Controls -->
+            <div class="left-panel">
+                <div class="controls panel">
+                    <h2>Settings</h2>
+                    <div class="control-group">
+                        <label for="puzzle-size">Puzzle Type:</label>
+                        <select id="puzzle-size">
+                            <option value="3">8-Puzzle (3x3)</option>
+                            <option value="4">15-Puzzle (4x4)</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label for="display-mode">Display Mode:</label>
+                        <select id="display-mode">
+                            <option value="numbers">Numbers Only</option>
+                            <option value="image">Image Puzzle</option>
+                        </select>
+                        <input type="file" id="image-upload" accept="image/*" style="display:none; margin-top:0.5rem; font-size: 0.8rem; color: var(--text-muted);">
+                    </div>
+                    <div class="control-group">
+                        <label for="heuristic">A* Heuristic:</label>
+                        <select id="heuristic">
+                            <option value="manhattan">Manhattan Distance</option>
+                            <option value="misplaced">Misplaced Tiles</option>
+                        </select>
+                    </div>
+                    <div class="control-group" id="speed-control" style="display:none;">
+                        <label for="speed">Animation Speed:</label>
+                        <input type="range" id="speed" min="10" max="800" value="150" dir="rtl">
+                    </div>
+                    
+                    <div class="button-group" style="flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem;">
+                        <button id="btn-shuffle" class="btn primary" style="flex: 1 1 45%;">🔀 Shuffle</button>
+                        <button id="btn-custom" class="btn" style="flex: 1 1 45%; background: #475569;">✏️ Custom State</button>
+                        <button id="btn-hint" class="btn" style="flex: 1 1 45%; background: #8b5cf6;">💡 Hint</button>
+                        <button id="btn-solve" class="btn success" style="flex: 1 1 45%;">🤖 Auto Solve</button>
+                    </div>
                 </div>
-                <div class="control-group">
-                    <label for="heuristic">Heuristic:</label>
-                    <select id="heuristic">
-                        <option value="manhattan">Manhattan Distance</option>
-                        <option value="misplaced">Misplaced Tiles</option>
-                    </select>
-                </div>
-                <div class="control-group">
-                    <label for="speed">Animation Speed:</label>
-                    <input type="range" id="speed" min="10" max="800" value="150" dir="rtl">
-                </div>
-                <div class="button-group">
-                    <button id="btn-shuffle" class="btn primary">Shuffle</button>
-                    <button id="btn-solve" class="btn success">Solve with A*</button>
+
+                <div class="metrics panel" id="player-stats">
+                    <h2>Manual Play</h2>
+                    <div style="display:flex; gap:1rem;">
+                        <div class="metric-box" style="flex:1; padding: 0.75rem;">
+                            <span class="metric-label">Time</span>
+                            <span id="player-time" class="metric-value" style="font-size: 1.25rem;">00:00</span>
+                        </div>
+                        <div class="metric-box" style="flex:1; padding: 0.75rem;">
+                            <span class="metric-label">Moves</span>
+                            <span id="player-moves" class="metric-value" style="font-size: 1.25rem;">0</span>
+                        </div>
+                    </div>
                 </div>
             </div>
             
+            <!-- Center Panel: Board -->
             <div class="board-container panel">
                 <div id="board" class="board size-3"></div>
-                <div id="status-message" class="status">Ready</div>
+                <div id="status-message" class="status">Ready. Shuffle to begin!</div>
+                
+                <!-- Playback Controls (Hidden by default) -->
+                <div id="playback-controls" class="playback-controls" style="display:none; width:100%; margin-top:1.5rem;">
+                    <div class="button-group" style="justify-content: center; gap: 0.5rem; margin-top: 0;">
+                        <button id="btn-prev" class="btn" style="background:#475569; padding:0.5rem; flex:0 1 80px;">⏪ Prev</button>
+                        <button id="btn-play-pause" class="btn primary" style="padding:0.5rem; flex:0 1 90px;">⏸ Pause</button>
+                        <button id="btn-next" class="btn" style="background:#475569; padding:0.5rem; flex:0 1 80px;">Next ⏩</button>
+                        <button id="btn-stop" class="btn" style="background:#ef4444; padding:0.5rem; flex:0 1 80px;">⏹ Stop</button>
+                    </div>
+                    <div style="text-align:center; margin-top:0.75rem; color:var(--text-muted); font-size:0.9rem;">
+                        Step: <span id="step-counter" style="color:var(--text-main); font-weight:bold;">0</span> / <span id="total-steps">0</span>
+                    </div>
+                </div>
             </div>
 
-            <div class="metrics panel">
-                <h2>Metrics Dashboard</h2>
+            <!-- Right Panel: AI Metrics -->
+            <div class="metrics panel" id="ai-stats">
+                <h2>AI Metrics (A*)</h2>
                 <div class="metric-box">
                     <span class="metric-label">Execution Time</span>
                     <span id="metric-time" class="metric-value">-</span>
@@ -54,7 +100,7 @@
                     <span id="metric-nodes" class="metric-value">-</span>
                 </div>
                 <div class="metric-box">
-                    <span class="metric-label">Total Moves</span>
+                    <span class="metric-label">AI Moves</span>
                     <span id="metric-moves" class="metric-value">-</span>
                 </div>
             </div>
