@@ -3,7 +3,6 @@ import time
 import random
 import sys
 
-# Fix cho lỗi in tiếng Việt trên màn hình console (Windows)
 sys.stdout.reconfigure(encoding='utf-8')
 
 class Node:
@@ -142,7 +141,6 @@ def is_solvable(state, size):
 
 def generate_random_solvable_state(size):
     # Đi lùi từ trạng thái đích bằng các bước hợp lệ 
-    # (Đảm bảo 100% có thể giải được)
     state = list(range(1, size * size)) + [0]
     blank_idx = size * size - 1
     
@@ -178,14 +176,13 @@ def print_board(state, size):
     print()
 
 def main():
-    size = 3 # Thay đổi thành 4 nếu muốn giải 15-puzzle (4x4)
+    size = 3 
     print(f"--- Thuật toán A* giải {size*size - 1}-Puzzle ---")
     
     initial_state = generate_random_solvable_state(size)
     print("Trạng thái ban đầu:")
     print_board(initial_state, size)
     
-    # Bạn có thể đổi heuristic_type thành 'misplaced'
     solver = PuzzleSolver(initial_state, size, heuristic_type='manhattan')
     
     print("Đang giải bằng Heuristic Manhattan...")
@@ -198,12 +195,6 @@ def main():
         print(f"Tổng số bước đi: {len(result['path']) - 1}")
         print(f"Số lượng Node đã mở rộng (Nodes Expanded): {result['nodes_expanded']}")
         print(f"Thời gian chạy: {result['time_ms']:.2f} ms\n")
-        
-        # Bỏ comment đoạn dưới nếu muốn in ra từng bước di chuyển của thuật toán
-        # print("Các bước đi:")
-        # for i, step in enumerate(result['path']):
-        #     print(f"Bước {i}:")
-        #     print_board(step, size)
 
 if __name__ == "__main__":
     main()
